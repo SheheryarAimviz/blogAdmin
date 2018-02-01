@@ -1,14 +1,18 @@
+import { ToastrModule } from 'ngx-toastr';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule  }    from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './users/login/login.component';
 import { RegisterComponent } from './users/register/register.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 import { AuthguardGuard } from './authguard.guard';
 import { UserService } from './users/shared/user.service';
@@ -24,7 +28,8 @@ const appRoutes: Routes =
     component: LoginComponent,
     data: { title: 'Login' }
   },
-  { path: '',
+  {
+    path: '',
     redirectTo: '/login',
     pathMatch: 'full'
   },
@@ -33,7 +38,10 @@ const appRoutes: Routes =
     canActivate: [AuthguardGuard],
     component: DashboardComponent
   },
-  { path: '**', component: LoginComponent }
+  {
+    path: '**',
+    component: PageNotFoundComponent
+  }
 ];
 
 @NgModule({
@@ -41,14 +49,18 @@ const appRoutes: Routes =
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    DashboardComponent
+    DashboardComponent,
+    PageNotFoundComponent
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     HttpClientModule,
     HttpModule,
     FormsModule,
-    ReactiveFormsModule ,
+    ReactiveFormsModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot(), // ToastrModule added
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true }

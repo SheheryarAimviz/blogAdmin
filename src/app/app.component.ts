@@ -13,11 +13,6 @@ export class AppComponent {
 
   ngOnInit() {
 
-    if (localStorage.getItem('currentUser')) {
-      this.router.navigate(['/dashboard']);
-    }
-    else{
-      this.router.navigate(['/']);
-    }
+  
   }
 }

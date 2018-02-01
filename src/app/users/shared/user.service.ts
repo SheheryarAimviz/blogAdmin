@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from './user.model';
 import { Router } from '@angular/router';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-// import { ToastrService } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class UserService {
@@ -10,35 +10,39 @@ export class UserService {
   selectedUser : User;
 
   userid:string;
-  constructor(private router: Router, private httpClient: HttpClient) { }
+  constructor(private toastr: ToastrService, private router: Router, private httpClient: HttpClient) { }
 
   login(user : User)
   {
-    console.log(user);
-      this.httpClient.post('https://jsonplaceholder.typicode.com/posts', user).subscribe(
+      this.httpClient.post('http://site.startupbug.net:6888/api/v1/public/api/user-login', user).subscribe(
        res => {
-         
-         localStorage.setItem('currentUser', JSON.stringify(res));
-         this.router.navigate(['/dashboard']);
-         // this.toastr.success('New Record Added Successfully','Employee Register');
+
+          if(res == "unauthorize"){
+            this.toastr.error('Email Address and Password in Invalid','User');
+          }
+          else
+          {
+            localStorage.setItem('currentUser', JSON.stringify(res));
+            this.router.navigate(['/dashboard']);
+            this.toastr.success('Login Successfully','User');
+          }
        },
        err => {
-         console.log("Error occured");
+         this.toastr.error('Email Address and Password in Invalid','User');
        }
      );
   }
 
   register(user : User)
   {
-      this.httpClient.post('https://jsonplaceholder.typicode.com/posts', user).subscribe(
+      this.httpClient.post('http://site.startupbug.net:6888/api/v1/public/api/user-register', user).subscribe(
        res => {
-           console.log(res);
            localStorage.setItem('currentUser', JSON.stringify(res));
            this.router.navigate(['/dashboard']);
-           // this.toastr.success('New Record Added Successfully','Employee Register');
+           this.toastr.success('New Record Added Successfully','User Register');
        },
        err => {
-         console.log("Error occured");
+         this.toastr.error('Email Address and Password in Invalid','User');
        }
      );
   }
